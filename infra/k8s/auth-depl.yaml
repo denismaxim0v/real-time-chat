@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-auth
+  template:
+    metadata:
+      labels:
+        app: chat-auth
+    spec:
+      containers:
+        - name: chat-auth
+          image: denismaxim0v/chat-auth
+          env:
+            - name: REDIS_HOST
+              value: auth-redis
+            - name: TYPEORM_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth-secret
+                  key: DB_HOST
+            - name: TYPEORM_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth-secret
+                  key: DB_USER
+            - name: TYPEORM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth-secret
+                  key: DB_PASSWORD
+            - name: TYPEORM_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth-secret
+                  key: DB_NAME
+            - name: TYPEORM_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-auth-secret
+                  key: DB_PORT
+            - name: TYPEORM_CONNECTION
+              value: 'postgres'
+            - name: TYPEORM_SYNCHRONIZE
+              value: 'true'
+            - name: TYPEORM_LOGGING
+              value: 'true'
+            - name: TYPEORM_ENTITIES
+              value: 'src/entity/*.ts,modules/**/entity/*.js'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-auth-srv
+spec:
+  selector:
+    app: chat-auth
+  ports:
+    - name: chat-auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
