@@ -6,6 +6,7 @@ import cors from "cors";
 import router from "./routes";
 
 import redis from 'redis'
+import kafka, { Producer } from 'kafka-node'
 
 //Connects to the Database -> then starts the express
 createConnection()
@@ -16,6 +17,7 @@ createConnection()
     // Call midlewares
     app.use(cors());
     app.use(bodyParser.json());
+    const client = new kafka.KafkaClient({kafkaHost: `${process.env.KAFKA_HOST}:${Number(process.env.KAFKA_PORT)}`});
 
     //Set all routes from routes folder
 

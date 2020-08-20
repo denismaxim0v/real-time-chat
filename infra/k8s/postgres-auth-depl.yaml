@@ -22,7 +22,7 @@ spec:
           imagePullPolicy: "IfNotPresent"
           envFrom:                                # Get the environmental variables from a secret file whose name is "postgres-secret" 
             - secretRef:
-                name: chat-auth-secret
+                name: postgres-auth-secret
           ports:
             - containerPort: 5432                   # The port that the container exposes 
               name: postgres

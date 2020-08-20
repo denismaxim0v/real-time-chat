@@ -18,6 +18,10 @@ spec:
           env:
             - name: REDIS_HOST
               value: auth-redis
+            - name: KAFKA_HOST
+              value: kafka-service
+            - name: KAFKA_PORT
+              value: "2181"
             - name: TYPEORM_HOST
               valueFrom:
                 secretKeyRef:
