@@ -5,8 +5,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import router from "./routes";
 
-import redis from 'redis'
-import kafka, { Producer } from 'kafka-node'
+import redis from "redis";
+import kafka, { Producer } from "kafka-node";
 
 //Connects to the Database -> then starts the express
 createConnection()
@@ -17,7 +17,13 @@ createConnection()
     // Call midlewares
     app.use(cors());
     app.use(bodyParser.json());
-    const client = new kafka.KafkaClient({kafkaHost: `${process.env.KAFKA_HOST}:${Number(process.env.KAFKA_PORT)}`});
+    const client = new kafka.KafkaClient({
+      kafkaHost: `${process.env.KAFKA_HOST}:${Number(process.env.KAFKA_PORT)}`,
+    });
+    const producer = new Producer(client);
+    producer.on("ready", function () {
+      console.log("producer is ready");
+    });
 
     //Set all routes from routes folder
 
@@ -25,14 +31,14 @@ createConnection()
     // read connection options from ormconfig file (or ENV variables)
     // const connectionOptions = await getConnectionOptions();
 
-    if(!process.env.REDIS_HOST) {
-      throw new Error("REDIS_HOST must be defined")
+    if (!process.env.REDIS_HOST) {
+      throw new Error("REDIS_HOST must be defined");
     }
 
     const redisClient = redis.createClient({
       port: 6379,
-      host: process.env.REDIS_HOST
-    })
+      host: process.env.REDIS_HOST,
+    });
 
     try {
       // broker stuff here
