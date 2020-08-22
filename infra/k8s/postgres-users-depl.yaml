@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment                                # Type of the kubernetes resource
+metadata:
+  name: chat-users-postgres                    # Name of the deployment
+  labels:                                        # Labels applied to this deployment 
+    app: chat-users-postgres 
+spec:
+  selector:
+    matchLabels:                                  # This deployment applies to the Pods matching the specified labels
+      app: chat-users-postgres 
+      tier: postgres
+  replicas: 1
+  template:                                       # Template for the Pods in this deployment
+    metadata:
+      labels:                                     # Labels to be applied to the Pods in this deployment
+        app: chat-users-postgres 
+        tier: postgres
+    spec:                                         # The spec for the containers that will be run inside the Pods in this deployment
+      containers:
+        - image: postgres:latest                  # The container image
+          name: chat-users-postgres 
+          imagePullPolicy: "IfNotPresent"
+          envFrom:                                # Get the environmental variables from a secret file whose name is "postgres-secret" 
+            - secretRef:
+                name: postgres-users-secret
+          ports:
+            - containerPort: 5432                   # The port that the container exposes 
+              name: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/users
+              name: chat-users-postgres-persistent-storage     # This name should match the name specified in `volumes.name`
+      volumes:                                      # A PersistentVolume is mounted as a volume to the Pod 
+        - name: chat-users-postgres-persistent-storage
+          persistentVolumeClaim:
+            claimName: postgres-pv-users-claim
+
+---
+  
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: microk8s-hostpath
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: microk8s.io/hostpat
+
+---
+  
+apiVersion: v1                                      # API version
+kind: Service                                       # Type of kubernetes resource 
+metadata:
+  name: chat-users-postgres                          # Name of the resource
+  labels:                                           # Labels that will be applied to the resource
+    app: chat-users-postgres
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:                                         # Selects any Pod with labels `app=fullstack-postgres,tier=postgres`
+    app: chat-users-postgres
+    tier: postgres
+---
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pv-users
+  labels:
+    app:  chat-users-postgres
+    type: local
+spec:
+  storageClassName: microk8s-hostpath
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data"
+  persistentVolumeReclaimPolicy: Retain 
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-users-claim
+  labels:
+    app: chat-users-postgres
+spec:
+  storageClassName: microk8s-hostpath
+  capacity:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
