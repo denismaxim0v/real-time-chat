@@ -30,15 +30,6 @@ createConnection()
     // read connection options from ormconfig file (or ENV variables)
     // const connectionOptions = await getConnectionOptions();
 
-    if (!process.env.REDIS_HOST) {
-      throw new Error("REDIS_HOST must be defined");
-    }
-
-    const redisClient = redis.createClient({
-      port: 6379,
-      host: process.env.REDIS_HOST,
-    });
-
     try {
       // broker stuff here
     } catch (err) {
