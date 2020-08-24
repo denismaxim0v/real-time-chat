@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import "express-async-errors";
-
+import { producer } from "../kafka";
 export default class UsersController {
   static getAll = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
@@ -34,6 +34,13 @@ export default class UsersController {
     } catch (e) {
       throw new Error("Couldn't create user");
     }
+    const payloads = [
+      { topic: "users", messages: "hi", partition: 0 },
+      { topic: "users", messages: ["hello", "world"] },
+    ];
+    producer.send(payloads, (err, data) => {
+      console.log(data);
+    });
 
     res.status(200).json(user);
   };

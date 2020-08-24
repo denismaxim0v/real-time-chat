@@ -19,10 +19,7 @@ createConnection()
     // Call midlewares
     app.use(cors());
     app.use(bodyParser.json());
-    const producer = new Producer(client);
-    producer.on("ready", function () {
-      console.log("producer is ready");
-    });
+    
 
     //Set all routes from routes folder
 
