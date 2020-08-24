@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: zookeeper-deployment-1
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: zookeeper-1
@@ -14,9 +14,11 @@ spec:
     spec:
       containers:
       - name: zoo1
-        image: bitnami/zookeeper
+        image: digitalwonderland/zookeeper
         ports:
         - containerPort: 2181
+        - containerPort: 2888
+        - containerPort: 3888
         env:
         - name: ZOOKEEPER_ID
           value: "1"
