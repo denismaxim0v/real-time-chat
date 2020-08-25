@@ -1,11 +1,11 @@
 # Real time chat application
 For this project I'm using:
-..* Docker
-..* Kubernetes(Minikube)
-..* Typescript
-..* Express
-..* Kafka
-..* Redis
+* Docker
+* Kubernetes(Minikube)
+* Typescript
+* Express
+* Kafka
+* Redis
 ---
 ### Notes
 Because there is a bug with minikube, the communication
