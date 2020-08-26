@@ -21,7 +21,7 @@ export const userCreatedConsumer = new kafka.Consumer(
 
 userCreatedConsumer.on("message", async(message) => {
   const userRepository = getRepository(User);
-
+  console.log(message, message.value)
   let user = new User();
   user = JSON.parse(message.value as string) as User;
   await userRepository.save(user);

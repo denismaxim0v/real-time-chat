@@ -35,8 +35,7 @@ export default class UsersController {
       throw new Error("Couldn't create user");
     }
     const payloads = [
-      { topic: "users", messages: "hi", partition: 0 },
-      { topic: "users", messages: ["hello", "world"] },
+      { topic: "users", messages: JSON.stringify(user), partition: 0 },
     ];
     producer.send(payloads, (err, data) => {
       console.log(data);
