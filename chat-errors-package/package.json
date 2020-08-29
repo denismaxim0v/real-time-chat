@@ -1,6 +1,6 @@
 {
   "name": "chat-events-package",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This README would normally document whatever steps are necessary to get your application up and running.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
