@@ -3,6 +3,8 @@ import { User } from "./entity/User";
 
 import { getRepository } from "typeorm";
 
+import "express-async-errors"
+
 export const client = new kafka.KafkaClient({
   kafkaHost: `${process.env.KAFKA_HOST}:${Number(process.env.KAFKA_PORT)}`,
 });
@@ -21,11 +23,15 @@ export const userCreatedConsumer = new kafka.Consumer(
 
 userCreatedConsumer.on("message", async(message) => {
   const userRepository = getRepository(User);
-  console.log(message, message.value)
+
   let user = new User();
   user = JSON.parse(message.value as string) as User;
-  await userRepository.save(user);
-  console.log('user saved')
+
+  try {
+    await userRepository.save(user);
+  } catch (e) {
+    throw new Error("Could not save user")
+  }
 })
 
 process.on('SIGINT', () => {

@@ -6,9 +6,6 @@ import cors from "cors";
 import router from "./routes";
 
 import redis from "redis";
-import kafka, { Producer } from "kafka-node";
-
-import {client} from './kafka';
 
 //Connects to the Database -> then starts the express
 createConnection()
