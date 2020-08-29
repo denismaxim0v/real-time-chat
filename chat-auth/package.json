@@ -10,6 +10,7 @@
       "@types/node": "^8.0.29",
       "@types/password-hash": "^1.2.20",
       "body-parser": "^1.19.0",
+      "chat-errors-package": "^1.0.2",
       "cors": "^2.8.5",
       "express": "^4.17.1",
       "express-async-errors": "^3.1.1",
