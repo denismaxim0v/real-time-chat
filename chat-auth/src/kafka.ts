@@ -1,6 +1,7 @@
 import kafka from "kafka-node";
 import { User } from "./entity/User";
 
+import { BadRequestError } from 'chat-errors-package';
 import { getRepository } from "typeorm";
 
 import "express-async-errors"
@@ -30,7 +31,7 @@ userCreatedConsumer.on("message", async(message) => {
   try {
     await userRepository.save(user);
   } catch (e) {
-    throw new Error("Could not save user")
+    throw new BadRequestError("Could not save user")
   }
 })
 

@@ -7,6 +7,8 @@ import router from "./routes";
 
 import redis from "redis";
 
+import { errorHandler } from 'chat-errors-package'
+
 //Connects to the Database -> then starts the express
 createConnection()
   .then(async (connection) => {
@@ -21,6 +23,7 @@ createConnection()
     //Set all routes from routes folder
 
     app.use("/", router);
+    app.use(errorHandler)
     // read connection options from ormconfig file (or ENV variables)
     // const connectionOptions = await getConnectionOptions();
 

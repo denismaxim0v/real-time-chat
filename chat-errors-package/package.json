@@ -1,6 +1,6 @@
 {
   "name": "chat-errors-package",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This README would normally document whatever steps are necessary to get your application up and running.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",

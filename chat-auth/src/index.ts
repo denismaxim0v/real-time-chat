@@ -8,7 +8,8 @@ import router from "./routes";
 import redis from "redis";
 import kafka, { Producer } from "kafka-node";
 
-import {client} from './kafka';
+import { errorHandler } from "chat-errors-package";
+import { client } from "./kafka";
 
 //Connects to the Database -> then starts the express
 createConnection()
@@ -27,6 +28,7 @@ createConnection()
     //Set all routes from routes folder
 
     app.use("/", router);
+    app.use(errorHandler)
     // read connection options from ormconfig file (or ENV variables)
     // const connectionOptions = await getConnectionOptions();
 
