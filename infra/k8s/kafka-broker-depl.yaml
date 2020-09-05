@@ -25,7 +25,7 @@ spec:
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: 172.17.0.3:30181
         - name: KAFKA_CREATE_TOPICS
-          value: "users:1:1"
+          value: "users-login:1:1, users-create:1:1, users-update:1:1, users-delete:1:1, users-login:1:1"
         image: wurstmeister/kafka
         imagePullPolicy: IfNotPresent
         name: kafka

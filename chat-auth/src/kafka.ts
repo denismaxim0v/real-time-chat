@@ -12,7 +12,7 @@ export const client = new kafka.KafkaClient({
 
 export const userCreatedConsumer = new kafka.Consumer(
   client,
-  [{ topic: "users" }],
+  [{ topic: "users-create"}],
   {
     autoCommit: true,
     fetchMaxWaitMs: 1000,
@@ -28,9 +28,12 @@ userCreatedConsumer.on("message", async(message) => {
   let user = new User();
   user = JSON.parse(message.value as string) as User;
 
+  console.log(user)
+
   try {
     await userRepository.save(user);
   } catch (e) {
+    console.log(e)
     throw new BadRequestError("Could not save user")
   }
 })

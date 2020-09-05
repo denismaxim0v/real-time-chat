@@ -22,6 +22,11 @@ spec:
               value: kafka-service
             - name: KAFKA_PORT
               value: "9092"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
             - name: TYPEORM_HOST
               valueFrom:
                 secretKeyRef:

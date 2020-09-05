@@ -4,6 +4,7 @@ import { User } from "../entity/User";
 import "express-async-errors";
 import { producer } from "../kafka";
 import { BadRequestError } from 'chat-errors-package'
+import passwordHash from 'password-hash'
 export default class UsersController {
   static getAll = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
@@ -29,6 +30,7 @@ export default class UsersController {
   static createUser = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
     let user = new User();
+    req.body.password = passwordHash.generate(req.body.password);
     user = req.body;
     try {
       await userRepository.save(user);
@@ -36,9 +38,12 @@ export default class UsersController {
       throw new BadRequestError("Couldn't create user");
     }
     const payloads = [
-      { topic: "users", messages: JSON.stringify(user), partition: 0 },
+      { topic: "users-create", messages: JSON.stringify(user), partition: 0 },
     ];
     producer.send(payloads, (err, data) => {
+      if(err) {
+        console.error(err)
+      }
       console.log(data);
     });
 
