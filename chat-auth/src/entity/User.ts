@@ -15,4 +15,7 @@ export class User extends BaseEntity{
     @Column({nullable: true})
     email: string;
 
+    @Column({nullable: true})
+    loggedIn: boolean;
+
 }
