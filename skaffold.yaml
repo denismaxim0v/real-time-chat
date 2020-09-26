@@ -24,3 +24,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: denismaxim0v/chat-srv
+      context: chat-srv
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+         - src: 'src/**/*.ts'
+           dest: .

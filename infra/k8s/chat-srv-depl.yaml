@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-srv-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-srv
+  template:
+    metadata:
+      labels:
+        app: chat-srv
+    spec:
+      containers:
+        - name: chat-srv
+          image: denismaxim0v/chat-srv
+          env:
+            - name: REDIS_HOST
+              value: auth-redis
+            - name: KAFKA_HOST
+              value: kafka-service
+            - name: KAFKA_PORT
+              value: "9092"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: TYPEORM_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-chat-srv-secret
+                  key: DB_HOST
+            - name: TYPEORM_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-chat-srv-secret
+                  key: DB_USER
+            - name: TYPEORM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-chat-srv-secret
+                  key: DB_PASSWORD
+            - name: TYPEORM_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-chat-srv-secret
+                  key: DB_NAME
+            - name: TYPEORM_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-chat-srv-secret
+                  key: DB_PORT
+            - name: TYPEORM_CONNECTION
+              value: 'postgres'
+            - name: TYPEORM_SYNCHRONIZE
+              value: 'true'
+            - name: TYPEORM_LOGGING
+              value: 'true'
+            - name: TYPEORM_ENTITIES
+              value: 'src/entity/*.ts,modules/**/entity/*.js'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-srv-srv
+spec:
+  selector:
+    app: chat-srv
+  ports:
+    - name: chat-srv
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
