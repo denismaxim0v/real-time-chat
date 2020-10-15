@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { createConnection, getConnectionOptions } from "typeorm";
 import express from "express";
+import http from 'http'
+import socketIO = require("socket.io");
 import bodyParser from "body-parser";
 import cors from "cors";
 
@@ -13,11 +15,13 @@ createConnection()
   .then(async (connection) => {
     // Create a new express application instance
     const app = express();
+    const server: http.Server = http.createServer(app);
+    const io: socketIO.Server = socketIO.listen(server);
 
     // Call midlewares
     app.use(cors());
     app.use(bodyParser.json());
-    
+
 
     //Set all routes from routes folder
 
@@ -34,5 +38,9 @@ createConnection()
     app.listen(3000, () => {
       console.log("Server started on port 3000!");
     });
+
+    io.sockets.on("connection", (socket) => {
+      console.log('user is connected')
+    })
   })
   .catch((error) => console.log(error));

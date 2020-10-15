@@ -20,3 +20,7 @@ spec:
             backend:
               serviceName: chat-users-srv
               servicePort: 3000
+          - path: /?(.*)
+            backend:
+              serviceName: client-srv
+              servicePort: 3000
